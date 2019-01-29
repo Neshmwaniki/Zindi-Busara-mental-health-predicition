@@ -1,16 +1,8 @@
 
-# ##### COnnect to Soar package for stored files
-# fstoreconnect=function(subdir){
-#   ######## Define subdirectory to store R objects (subdir) 
-#   oldLC <- Sys.getenv("R_LOCAL_CACHE", unset = ".R_Cache")
-#   Sys.setenv(R_LOCAL_CACHE=subdir) }
-# 
-# 
-# fstoreconnect("rstore")
-# tmp=Objects()
 
 
-############
+
+############ Grouping Functions
 group_age <- function(age){
   if (age >= 0 & age <= 25){
     return('students')
@@ -59,30 +51,6 @@ group_ex = function(x){
   }
 }
 
-################### Interaction functions
-my.f2cnt<-function(th2, vn1, vn2, filter=TRUE) {
-  df <- data.frame(f1=th2[,vn1], f2=th2[,vn2], filter=filter)
-  sum1<- sqldf::sqldf("select f1, f2, count(*) as cnt from df where filter=1 group by 1,2")
-  tmp<- sqldf::sqldf("select b.cnt from df a left join sum1 b on a.f1=b.f1 and a.f2=b.f2")
-  tmp$cnt[is.na(tmp$cnt)]<-0
-  return(tmp$cnt)
-}
-
-
-factorToNumeric <- function(train, test, response, variables, metrics){
-  require(qdapTools, quietly = T)
-  temp <- data.frame(c(rep(0,nrow(test))), row.names = NULL)
-  
-  for (variable in variables){
-    for (metric in metrics) {
-      x <- tapply(train[, response], train[,variable], metric)
-      x <- data.frame(row.names(x),x, row.names = NULL)
-      temp <- data.frame(temp,round(lookup(test[,variable], x),2))
-      colnames(temp)[ncol(temp)] <- paste(metric,variable, sep = "_")
-    }
-  }
-  return (temp[,-1])
-}
 
 # Encode a character or factor with its hexavegisimal value
 hexv.encode = function(x, xnew = x) {

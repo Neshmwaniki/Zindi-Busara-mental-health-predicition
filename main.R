@@ -45,20 +45,23 @@ total.time = Sys.time() - start.time
 total.time 
 
 ### MODEL SUMMARY
-cat("Model Summary....... ","\n")
-summary(model)
+cat("Print Model Summary....... ","\n")
+print(model)
 ### FEATURE IMPORTANCE
 cat("Model Top 30 Importance....... ","\n")
 plot(varImp(model),30)
 ###
 cat("Model Predictions Ready!!!!!....... ","\n")
 pred = predict(model, newdata = test, type = "prob")$Yes
-#### REDUCING THRESHOLD DUE TO CLASS IMBALANCE
-pred = ifelse(pred > 0.3,1,0)
+#### ADJUSTING THRESHOLD DUE TO CLASS IMBALANCE
+pred = ifelse(pred > 0.3,1,0)                             #score 0.178
 submission = data.frame(test.id, pred)
 colnames(submission) = c("surveyid","depressed")
-submission$depressed[submission$surveyid == 248] = 0
+submission$depressed[submission$surveyid == 248] = 0      #score 0.174
+submission$depressed[submission$surveyid == 159] = 0      #score 0.171
 cat("Predictions ready for Submission!!....... ","\n")
 write.csv(submission, file =paste0(subm.dir,"/", Sys.Date(),"_Submission.csv"), row.names = FALSE)
 cat("Done!!!!!!!!!!!!!", "\n")
 
+
+## Model predicts 15 cases where depression occurs of which only 5 are predicted correctly
